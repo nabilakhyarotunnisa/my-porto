@@ -384,7 +384,7 @@ export const certifications = [
 export const workExperiences = [
   {
     role: "Data Entry",
-    company: "Current Company",
+    company: "Indokarya Recta Propertindo",
     period: "Oct 2022 – Present · 3 yrs 9 mos",
     location: "Bogor Regency, West Java, Indonesia",
     skills: [
@@ -403,12 +403,10 @@ export const workExperiences = [
   },
   {
     role: "Digital Marketing Analyst",
-    company: "Current Company",
-    period: "Present",
-    location: "Indonesia",
+    company: "Indokarya Recta Propertindo",
+    period: "Oct 2022 – Present · 3 yrs 9 mos",
+    location: "Bogor Regency, West Java, Indonesia",
     skills: [
-      "Google Analytics",
-      "SEO",
       "Social Media Marketing",
       "Meta Ads",
       "Data Analysis",
