@@ -10,6 +10,7 @@ export default function WorkExperience() {
       aria-labelledby="work-experience-heading"
     >
       <SectionHeader
+        id="work-experience-heading"
         eyebrow="Professional"
         title="Work Experience"
         description="Professional experience in administration, data management, and digital marketing."

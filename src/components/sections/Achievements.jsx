@@ -10,6 +10,7 @@ export default function Achievements() {
       aria-labelledby="achievements-heading"
     >
       <SectionHeader
+        id="achievements-heading"
         eyebrow="Milestones"
         title="Achievements"
         description="Competition, innovation, and business funding achievements."

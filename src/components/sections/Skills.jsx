@@ -9,6 +9,7 @@ export default function Skills() {
       aria-labelledby="skills-heading"
     >
       <SectionHeader
+        id="skills-heading"
         eyebrow="Skills"
         title="Skills & Tools"
         description="Technical skills grouped around data science, machine learning, software engineering, and web development."

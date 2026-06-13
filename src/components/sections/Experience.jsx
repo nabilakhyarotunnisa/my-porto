@@ -10,6 +10,7 @@ export default function Experience() {
       aria-labelledby="experience-heading"
     >
       <SectionHeader
+        id="experience-heading"
         eyebrow="Experience"
         title="Organizational Experience"
         description="Leadership, creative, event, marketing, and community experience."

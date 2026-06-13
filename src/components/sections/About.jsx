@@ -5,6 +5,7 @@ export default function About() {
   return (
     <section id="about" className="section" aria-labelledby="about-heading">
       <SectionHeader
+        id="about-heading"
         eyebrow="About"
         title="About Me"
         description="A quick introduction about my academic background, interests, and professional direction."

@@ -10,6 +10,7 @@ export default function Certifications() {
       aria-labelledby="certifications-heading"
     >
       <SectionHeader
+        id="certifications-heading"
         eyebrow="Learning"
         title="Training & Certifications"
         description="Relevant certifications and learning roadmap in data science, machine learning, and web development."

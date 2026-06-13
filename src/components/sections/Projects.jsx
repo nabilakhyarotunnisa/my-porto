@@ -13,6 +13,7 @@ export default function Projects() {
       aria-labelledby="projects-heading"
     >
       <SectionHeader
+        id="projects-heading"
         eyebrow="Portfolio"
         title="Featured Projects"
         description="Selected projects across data science, machine learning, web development, dashboard development, and AI-powered applications."

@@ -9,6 +9,7 @@ export default function Contact() {
       aria-labelledby="contact-heading"
     >
       <SectionHeader
+        id="contact-heading"
         eyebrow="Contact"
         title="Let's Connect"
         description="Open for internship opportunities, data-related projects, web development collaboration, professional networking, and technology communities."
