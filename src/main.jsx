@@ -492,6 +492,21 @@ function NavDropdown({ item }) {
     setIsOpen(!isOpen);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Escape") {
+      setIsOpen(false);
+    }
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setIsOpen(!isOpen);
+    }
+    if (e.key === "ArrowDown" && isOpen) {
+      e.preventDefault();
+      const items = document.querySelectorAll(".nav-dropdown-item");
+      items[0]?.focus();
+    }
+  };
+
   const handleSubItemClick = () => {
     setIsOpen(false);
   };
@@ -502,22 +517,32 @@ function NavDropdown({ item }) {
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      <a
-        href={item.href}
+      <button
+        type="button"
         className="nav-dropdown-trigger"
         onClick={handleTriggerClick}
+        onKeyDown={handleKeyDown}
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        aria-label={`${item.label} submenu`}
       >
         {item.label}
-      </a>
+      </button>
 
       {isOpen && (
-        <div className="nav-dropdown-menu">
+        <div className="nav-dropdown-menu" role="menu">
           {item.subItems.map((subItem) => (
             <a
               key={subItem.label}
               href={subItem.href}
+              role="menuitem"
               className="nav-dropdown-item"
               onClick={handleSubItemClick}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  setIsOpen(false);
+                }
+              }}
             >
               {subItem.label}
             </a>
@@ -590,15 +615,15 @@ function App() {
             </div>
 
             <div className="social-links">
-              <a href="mailto:nabila.khy@gmail.com" aria-label="Email">
+              <a href="mailto:nabila.khy@gmail.com" aria-label="Send email to Nabila">
                 <Mail size={20} />
               </a>
 
               <a
                 href="https://github.com/nabilakhyarotunnisa"
                 target="_blank"
-                rel="noreferrer"
-                aria-label="GitHub"
+                rel="noopener noreferrer"
+                aria-label="Visit Nabila's GitHub profile"
               >
                 GitHub
               </a>
@@ -606,8 +631,8 @@ function App() {
               <a
                 href="https://linkedin.com/in/nabila-khyarotunnisa"
                 target="_blank"
-                rel="noreferrer"
-                aria-label="LinkedIn"
+                rel="noopener noreferrer"
+                aria-label="Visit Nabila's LinkedIn profile"
               >
                 LinkedIn
               </a>
@@ -615,8 +640,8 @@ function App() {
               <a
                 href="https://instagram.com/nabilakhy._"
                 target="_blank"
-                rel="noreferrer"
-                aria-label="Instagram"
+                rel="noopener noreferrer"
+                aria-label="Visit Nabila's Instagram profile"
               >
                 Instagram
               </a>
@@ -752,8 +777,9 @@ function App() {
               <a
                 href={project.caseStudyUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="small-link"
+                aria-label={`View case study for ${project.title}`}
               >
                 View Case Study <ExternalLink size={16} />
               </a>
@@ -761,8 +787,9 @@ function App() {
               <a
                 href={project.repositoryUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="small-link"
+                aria-label={`View GitHub repository for ${project.title}`}
               >
                 View Repository <ExternalLink size={16} />
               </a>
@@ -805,32 +832,33 @@ function App() {
           description="Relevant certifications and learning roadmap in data science, machine learning, and web development."
         />
 
-              <div className="cert-grid">
-        {certifications.map((cert) => (
-          <article className="cert-card" key={cert.title}>
-            <div>
-              <h3>{cert.title}</h3>
-              <p>{cert.issuer}</p>
-              <span>{cert.date}</span>
+        <div className="cert-grid">
+          {certifications.map((cert) => (
+            <article className="cert-card" key={cert.title}>
+              <div>
+                <h3>{cert.title}</h3>
+                <p>{cert.issuer}</p>
+                <time dateTime={cert.date}>{cert.date}</time>
 
-              <ul>
-                {cert.scope.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
+                <ul aria-label={`Skills for ${cert.title}`}>
+                  {cert.scope.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
 
-            <a
-              href={cert.certificateUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="cert-button"
-            >
-              View Certificate <ExternalLink size={16} />
-            </a>
-          </article>
-        ))}
-      </div>
+              <a
+                href={cert.certificateUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cert-button"
+                aria-label={`View certificate for ${cert.title}`}
+              >
+                View Certificate <ExternalLink size={16} />
+              </a>
+            </article>
+          ))}
+        </div>
       </section>
 
 <section id="work-experience" className="section">
@@ -938,14 +966,15 @@ function App() {
           </p>
 
           <div className="contact-links">
-            <a href="mailto:nabila.khy@gmail.com">
+            <a href="mailto:nabila.khy@gmail.com" aria-label="Send email to Nabila">
               <Mail size={18} /> nabila.khy@gmail.com
             </a>
 
             <a
               href="https://linkedin.com/in/nabila-khyarotunnisa"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
+              aria-label="Visit Nabila's LinkedIn profile"
             >
               <ExternalLink size={18} /> LinkedIn
             </a>
@@ -953,7 +982,8 @@ function App() {
             <a
               href="https://github.com/nabilakhyarotunnisa"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
+              aria-label="Visit Nabila's GitHub profile"
             >
               <ExternalLink size={18} /> GitHub
             </a>
@@ -961,7 +991,8 @@ function App() {
             <a
               href="https://instagram.com/nabilakhy._"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
+              aria-label="Visit Nabila's Instagram profile"
             >
               <ExternalLink size={18} /> Instagram
             </a>
