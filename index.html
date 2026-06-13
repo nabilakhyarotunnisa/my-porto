@@ -2,14 +2,70 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffe4b3" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1d1d1f" media="(prefers-color-scheme: dark)" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="description" content="Personal portfolio of Nabila Khyarotunnisa, Machine Learning and Data Science Enthusiast passionate about cloud-based data products and digital innovation." />
+    <meta name="keywords" content="Machine Learning, Data Science, Web Development, Python, React, Portfolio" />
+    <meta name="author" content="Nabila Khyarotunnisa" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
     <meta property="og:title" content="Nabila Khyarotunnisa — Portfolio" />
     <meta property="og:description" content="Machine Learning, Data Science, Cloud, and Digital Product portfolio." />
-    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/nabila.png" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Nabila Khyarotunnisa — Portfolio" />
+    <meta name="twitter:description" content="Machine Learning, Data Science, Cloud, and Digital Product portfolio." />
+    <meta name="twitter:image" content="/nabila.png" />
+
+    <!-- iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Nabila" />
+    <link rel="apple-touch-icon" href="/nabila.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/nabila.png" />
+
+    <!-- Fonts: preconnect + non-blocking load with font-display: swap -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      />
+    </noscript>
+
     <title>Nabila Khyarotunnisa — Portfolio</title>
   </head>
   <body>
+    <noscript>
+      <p style="text-align: center; padding: 2rem; font-family: system-ui, -apple-system, sans-serif;">
+        This website requires JavaScript. Please enable JavaScript in your browser settings.
+      </p>
+    </noscript>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
