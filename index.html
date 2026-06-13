@@ -57,6 +57,21 @@
       />
     </noscript>
 
+    <!-- Inline theme bootstrap: prevents flash of wrong theme (FOWT) -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("nabila-theme");
+          if (stored === "light" || stored === "dark") {
+            document.documentElement.setAttribute("data-theme", stored);
+          }
+          // If "system" or no value, follow prefers-color-scheme via CSS
+        } catch (e) {
+          // localStorage unavailable — fall back to system preference
+        }
+      })();
+    </script>
+
     <title>Nabila Khyarotunnisa — Portfolio</title>
   </head>
   <body>

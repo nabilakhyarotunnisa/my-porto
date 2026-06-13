@@ -1,6 +1,7 @@
 import React from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { navItems } from "../data";
+import ThemeToggle from "./ThemeToggle";
 
 function NavDropdown({ item, isMobile = false, closeMobileMenu }) {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -189,6 +190,8 @@ export default function Navbar() {
             )
           )}
         </div>
+
+        <ThemeToggle />
 
         <button
           type="button"
