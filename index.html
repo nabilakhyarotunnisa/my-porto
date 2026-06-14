@@ -62,15 +62,16 @@
       (function () {
         try {
           var stored = localStorage.getItem("nabila-theme");
-          if (stored === "light" || stored === "dark") {
-            document.documentElement.setAttribute("data-theme", stored);
-          }
-          // If "system" or no value, follow prefers-color-scheme via CSS
+          // Only "light" or "dark" are valid; fall back to "light" otherwise.
+          var theme = stored === "dark" ? "dark" : "light";
+          document.documentElement.setAttribute("data-theme", theme);
         } catch (e) {
-          // localStorage unavailable — fall back to system preference
+          // localStorage unavailable — apply light to match default
+          document.documentElement.setAttribute("data-theme", "light");
         }
       })();
     </script>
+
 
     <title>Nabila Khyarotunnisa — Portfolio</title>
   </head>
@@ -80,7 +81,6 @@
         This website requires JavaScript. Please enable JavaScript in your browser settings.
       </p>
     </noscript>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

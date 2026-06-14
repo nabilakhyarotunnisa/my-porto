@@ -1,221 +1,191 @@
-import React from "react";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Menu, X } from "lucide-react";
 import { navItems } from "../data";
+import NavDropdown from "./NavDropdown";
 import ThemeToggle from "./ThemeToggle";
 
-function NavDropdown({ item, isMobile = false, closeMobileMenu }) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const dropdownRef = React.useRef(null);
-  const triggerRef = React.useRef(null);
-
-  // Close on outside click (desktop only)
-  React.useEffect(() => {
-    if (isMobile) return;
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isMobile]);
-
-  // Close on Escape
-  React.useEffect(() => {
-    function handleEscape(event) {
-      if (event.key === "Escape") {
-        setIsOpen(false);
-        if (triggerRef.current) triggerRef.current.focus();
-      }
-    }
-    if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
-      return () => document.removeEventListener("keydown", handleEscape);
-    }
-  }, [isOpen]);
-
-  const handleTriggerClick = (e) => {
-    e.preventDefault();
-    setIsOpen((prev) => !prev);
-  };
-
-  const handleSubItemClick = () => {
-    setIsOpen(false);
-    if (isMobile && closeMobileMenu) closeMobileMenu();
-  };
-
-  const handleTriggerKeyDown = (e) => {
-    if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
-      e.preventDefault();
-      setIsOpen(true);
-      // Focus first item
-      setTimeout(() => {
-        const firstItem = dropdownRef.current?.querySelector(".nav-dropdown-item");
-        if (firstItem) firstItem.focus();
-      }, 0);
-    }
-  };
-
-  const dropdownId = `dropdown-${item.label.replace(/\s+/g, "-").toLowerCase()}`;
-
-  return (
-    <div
-      className={`nav-dropdown ${isOpen ? "is-open" : ""}`}
-      ref={dropdownRef}
-      onMouseEnter={isMobile ? undefined : () => setIsOpen(true)}
-      onMouseLeave={isMobile ? undefined : () => setIsOpen(false)}
-    >
-      <a
-        ref={triggerRef}
-        href={item.href}
-        className="nav-dropdown-trigger"
-        onClick={handleTriggerClick}
-        onKeyDown={handleTriggerKeyDown}
-        aria-haspopup="true"
-        aria-expanded={isOpen}
-        aria-controls={dropdownId}
-      >
-        {item.label}
-        <ChevronDown
-          size={14}
-          aria-hidden="true"
-          className="nav-dropdown-chevron"
-        />
-      </a>
-
-      {isOpen && (
-        <div
-          className="nav-dropdown-menu"
-          role="menu"
-          id={dropdownId}
-        >
-          {item.subItems.map((subItem) => (
-            <a
-              key={subItem.label}
-              href={subItem.href}
-              className="nav-dropdown-item"
-              role="menuitem"
-              tabIndex={0}
-              onClick={handleSubItemClick}
-            >
-              {subItem.label}
-            </a>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
 export default function Navbar() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  // Lock body scroll when mobile menu is open
-  React.useEffect(() => {
-    if (isMobileMenuOpen) {
-      const originalOverflow = document.body.style.overflow;
-      const originalPaddingRight = document.body.style.paddingRight;
-      const scrollbarWidth =
-        window.innerWidth - document.documentElement.clientWidth;
+  // Lock body scroll while the mobile menu is open
+  useEffect(() => {
+    if (isMobileOpen) {
       document.body.style.overflow = "hidden";
-      if (scrollbarWidth > 0) {
-        document.body.style.paddingRight = `${scrollbarWidth}px`;
-      }
-      return () => {
-        document.body.style.overflow = originalOverflow;
-        document.body.style.paddingRight = originalPaddingRight;
-      };
+    } else {
+      document.body.style.overflow = "";
     }
-  }, [isMobileMenuOpen]);
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileOpen]);
 
-  // Close on Escape
-  React.useEffect(() => {
-    function handleEscape(event) {
-      if (event.key === "Escape" && isMobileMenuOpen) {
-        setIsMobileMenuOpen(false);
-      }
+  // Close mobile menu on resize to desktop
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    function handle(e) {
+      if (e.matches) setIsMobileOpen(false);
     }
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [isMobileMenuOpen]);
-
-  // Close mobile menu when resizing to desktop
-  React.useEffect(() => {
-    function handleResize() {
-      if (window.innerWidth > 1024 && isMobileMenuOpen) {
-        setIsMobileMenuOpen(false);
-      }
-    }
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [isMobileMenuOpen]);
-
-  const handleMobileLinkClick = () => {
-    setIsMobileMenuOpen(false);
-  };
-
-  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+    mq.addEventListener("change", handle);
+    return () => mq.removeEventListener("change", handle);
+  }, []);
 
   return (
     <>
-      <nav
-        className="navbar"
-        role="navigation"
-        aria-label="Main navigation"
+      <a
+        href="#main-content"
+        className="skip-link"
+        onClick={(e) => {
+          e.preventDefault();
+          const target = document.getElementById("main-content");
+          if (target) target.focus();
+        }}
       >
-        <a href="#home" className="logo" aria-label="Nabila - Home">
-          Nabila<span>.</span>
-        </a>
+        Skip to content
+      </a>
 
-        <div
-          className={`nav-links ${isMobileMenuOpen ? "is-open" : ""}`}
-          id="primary-navigation"
+      <header
+        className="fixed top-safe-top left-1/2 -translate-x-1/2 z-40
+                   w-[min(100%-24px,1180px)]
+                   rounded-full
+                   bg-card-strong backdrop-blur-2xl
+                   border border-[rgba(255,120,159,0.18)]
+                   dark:border-[rgba(255,120,159,0.25)]
+                   shadow-navbar"
+      >
+        <nav
+          aria-label="Main"
+          className="flex items-center justify-between gap-3 px-4 md:px-6 py-2.5 md:py-3"
         >
-          {navItems.map((item) =>
-            item.subItems ? (
-              <NavDropdown
-                key={item.label}
-                item={item}
-                isMobile={isMobileMenuOpen}
-                closeMobileMenu={closeMobileMenu}
-              />
-            ) : (
-              <a
-                key={item.label}
-                href={item.href}
-                onClick={handleMobileLinkClick}
-              >
-                {item.label}
-              </a>
-            )
-          )}
-        </div>
+          <a
+            href="#home"
+            className="flex items-center gap-2 shrink-0
+                       text-base md:text-lg font-extrabold text-navy
+                       px-2 md:px-3 py-1 rounded-full
+                       hover:bg-soft-soft dark:hover:bg-soft
+                       transition-colors duration-200
+                       focus-visible:outline-2 focus-visible:outline-accent
+                       focus-visible:outline-offset-2"
+          >
+            <span
+              className="inline-flex items-center justify-center w-8 h-8 md:w-9 md:h-9
+                         rounded-full text-white text-sm font-extrabold
+                         bg-gradient-to-br from-accent to-accent-soft
+                         shadow-[0_6px_18px_rgba(255,120,159,0.32)]"
+            >
+              N
+            </span>
+            <span className="hidden sm:inline">Nabila</span>
+          </a>
 
-        <ThemeToggle />
+          <ul className="hidden lg:flex items-center gap-1">
+            {navItems.map((item) => (
+              <li key={item.label}>
+                {item.subItems ? (
+                  <NavDropdown item={item} />
+                ) : (
+                  <a
+                    href={item.href}
+                    className="block px-3 md:px-4 py-2 rounded-full
+                               text-sm font-semibold text-navy
+                               hover:bg-soft-soft dark:hover:bg-soft
+                               transition-colors duration-200
+                               focus-visible:outline-2 focus-visible:outline-accent
+                               focus-visible:outline-offset-2"
+                  >
+                    {item.label}
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
 
-        <button
-          type="button"
-          className={`nav-toggle ${isMobileMenuOpen ? "is-open" : ""}`}
-          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={isMobileMenuOpen}
-          aria-controls="primary-navigation"
-          onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-        >
-          {isMobileMenuOpen ? (
-            <X size={22} aria-hidden="true" />
-          ) : (
-            <Menu size={22} aria-hidden="true" />
-          )}
-        </button>
-      </nav>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => setIsMobileOpen((p) => !p)}
+              aria-label={isMobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMobileOpen}
+              aria-controls="mobile-nav"
+              className="lg:hidden w-10 h-10 md:w-11 md:h-11 rounded-full
+                         grid place-items-center
+                         bg-card-soft border border-[rgba(255,120,159,0.18)]
+                         dark:border-[rgba(255,120,159,0.25)] text-navy
+                         hover:bg-card-strong hover:scale-105 active:scale-95
+                         transition-all duration-200
+                         focus-visible:outline-2 focus-visible:outline-accent
+                         focus-visible:outline-offset-2"
+            >
+              {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
+        </nav>
+      </header>
 
-      {isMobileMenuOpen && (
+      {isMobileOpen && (
         <div
-          className="nav-backdrop"
-          onClick={() => setIsMobileMenuOpen(false)}
+          className="fixed inset-0 z-30 lg:hidden
+                     bg-[rgba(45,27,46,0.45)] backdrop-blur-sm
+                     animate-fade-in"
+          onClick={() => setIsMobileOpen(false)}
           aria-hidden="true"
         />
       )}
+
+      <div
+        id="mobile-nav"
+        className={`fixed top-[110px] left-1/2 -translate-x-1/2 z-40 lg:hidden
+                    w-[min(100%-24px,420px)]
+                    rounded-card-lg p-4
+                    bg-card-strong backdrop-blur-2xl
+                    border border-[rgba(255,120,159,0.2)]
+                    dark:border-[rgba(255,120,159,0.25)]
+                    shadow-nav-mobile
+                    origin-top transition-all duration-200
+                    ${
+                      isMobileOpen
+                        ? "scale-100 opacity-100 pointer-events-auto"
+                        : "scale-95 opacity-0 pointer-events-none"
+                    }`}
+      >
+        <ul className="flex flex-col gap-1">
+          {navItems.map((item) => (
+            <li key={item.label}>
+              {item.subItems ? (
+                <div className="flex flex-col">
+                  <span className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-accent">
+                    {item.label}
+                  </span>
+                  {item.subItems.map((sub) => (
+                    <a
+                      key={sub.href}
+                      href={sub.href}
+                      onClick={() => setIsMobileOpen(false)}
+                      className="block px-4 py-2 ml-3 rounded-xl
+                                 text-sm font-semibold text-navy
+                                 hover:bg-soft-soft dark:hover:bg-soft
+                                 transition-colors duration-200"
+                    >
+                      {sub.label}
+                    </a>
+                  ))}
+                </div>
+              ) : (
+                <a
+                  href={item.href}
+                  onClick={() => setIsMobileOpen(false)}
+                  className="block px-4 py-3 rounded-xl
+                             text-sm font-semibold text-navy
+                             hover:bg-soft-soft dark:hover:bg-soft
+                             transition-colors duration-200"
+                >
+                  {item.label}
+                </a>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
     </>
   );
 }

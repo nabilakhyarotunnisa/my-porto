@@ -12,7 +12,11 @@ import Footer from "./components/sections/Footer";
 
 export default function App() {
   return (
-    <main id="main-content" tabIndex={-1}>
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="relative w-full max-w-full overflow-x-hidden"
+    >
       <Navbar />
       <Hero />
       <About />

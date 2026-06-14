@@ -5,7 +5,8 @@ MVP single-page portfolio website based on the Product Requirements Document.
 ## Tech Stack
 - React.js
 - Vite
-- Tailwind CSS via `@tailwindcss/vite`
+- Tailwind CSS v4 via `@tailwindcss/vite`
+- DaisyUI v5 (UI component library, custom `nabila-light` / `nabila-dark` themes matching the existing palette)
 - Framer Motion
 - Lucide React Icons
 

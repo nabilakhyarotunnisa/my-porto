@@ -1,88 +1,61 @@
 import { useState, useEffect, useCallback } from "react";
 
 const STORAGE_KEY = "nabila-theme";
-
-function getSystemTheme() {
-  if (typeof window === "undefined") return "light";
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
-}
+const VALID_THEMES = ["light", "dark"];
 
 function getInitialTheme() {
-  if (typeof window === "undefined") return "system";
+  if (typeof window === "undefined") return "light";
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored === "light" || stored === "dark" || stored === "system") {
-      return stored;
-    }
-  } catch (e) {
-    // localStorage unavailable
+    if (VALID_THEMES.includes(stored)) return stored;
+  } catch {
+    // localStorage unavailable — fall through to default
   }
-  return "system";
+  return "light";
 }
 
 function applyTheme(theme) {
   const root = document.documentElement;
-  if (theme === "light" || theme === "dark") {
-    root.setAttribute("data-theme", theme);
-  } else {
-    // "system" — remove explicit override so CSS @media takes over
-    root.removeAttribute("data-theme");
-  }
+  // Always set data-theme explicitly so CSS [data-theme="..."] rules win
+  // over any system @media (prefers-color-scheme: dark) block.
+  root.setAttribute("data-theme", theme);
 }
 
+/**
+ * Light / dark theme toggle.
+ * - Persists to localStorage
+ * - Applies via data-theme on <html>
+ * - No "system" mode: explicit user choice only (more predictable, no FOUC)
+ */
 export function useTheme() {
   const [theme, setThemeState] = useState(getInitialTheme);
-  const [resolvedTheme, setResolvedTheme] = useState(() => {
-    if (theme === "light" || theme === "dark") return theme;
-    return getSystemTheme();
-  });
 
-  // Apply theme + listen to system changes when in "system" mode
+  // Apply theme whenever it changes
   useEffect(() => {
     applyTheme(theme);
-
-    if (theme === "system") {
-      const mq = window.matchMedia("(prefers-color-scheme: dark)");
-      const updateResolved = () => {
-        const next = mq.matches ? "dark" : "light";
-        setResolvedTheme(next);
-      };
-      updateResolved();
-      // Modern browsers
-      if (mq.addEventListener) {
-        mq.addEventListener("change", updateResolved);
-        return () => mq.removeEventListener("change", updateResolved);
-      }
-      // Safari < 14 fallback
-      mq.addListener(updateResolved);
-      return () => mq.removeListener(updateResolved);
-    } else {
-      setResolvedTheme(theme);
-    }
   }, [theme]);
 
   const setTheme = useCallback((newTheme) => {
+    if (!VALID_THEMES.includes(newTheme)) return;
     setThemeState(newTheme);
     try {
       localStorage.setItem(STORAGE_KEY, newTheme);
-    } catch (e) {
+    } catch {
       // localStorage unavailable — preference will not persist
     }
   }, []);
 
-  const cycleTheme = useCallback(() => {
+  const toggleTheme = useCallback(() => {
     setThemeState((current) => {
-      const next = current === "light" ? "dark" : current === "dark" ? "system" : "light";
+      const next = current === "light" ? "dark" : "light";
       try {
         localStorage.setItem(STORAGE_KEY, next);
-      } catch (e) {
+      } catch {
         // ignore
       }
       return next;
     });
   }, []);
 
-  return { theme, setTheme, resolvedTheme, cycleTheme };
+  return { theme, setTheme, toggleTheme };
 }

@@ -1,0 +1,402 @@
+/* ==========================================================
+   Nabila Portfolio — Tailwind CSS 4 + DaisyUI
+   ==========================================================
+   This file is the SINGLE source of styling for the app.
+   It defines the design tokens, the dark mode strategy, and
+   base layer resets. All component styling lives in the
+   component files themselves as Tailwind utility classes.
+   ========================================================== */
+
+@import "tailwindcss";
+
+/* ----------------------------------------------------------
+   DaisyUI plugin (kept for any future DaisyUI component use).
+   Custom themes mirror the palette used in the rest of the app.
+   ---------------------------------------------------------- */
+
+@plugin "daisyui" {
+  themes: nabila-light --default, nabila-dark --prefersdark;
+}
+
+@plugin "daisyui/theme" {
+  name: "nabila-light";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+  --color-base-100: #fffbf7;
+  --color-base-200: #fff5e6;
+  --color-base-300: #ffe4b3;
+  --color-base-content: #2d1b2e;
+  --color-primary: #ff789f;
+  --color-primary-content: #ffffff;
+  --color-secondary: #ffb51f;
+  --color-secondary-content: #2d1b2e;
+  --color-accent: #ff789f;
+  --color-accent-content: #ffffff;
+  --color-neutral: #6b4a6f;
+  --color-neutral-content: #f5f5f7;
+  --radius-selector: 999px;
+  --radius-field: 999px;
+  --radius-box: 28px;
+}
+
+@plugin "daisyui/theme" {
+  name: "nabila-dark";
+  default: false;
+  prefersdark: true;
+  color-scheme: dark;
+  --color-base-100: #1d1d1f;
+  --color-base-200: #2a2a2f;
+  --color-base-300: #242429;
+  --color-base-content: #f5f5f7;
+  --color-primary: #ff789f;
+  --color-primary-content: #ffffff;
+  --color-secondary: #ffb51f;
+  --color-secondary-content: #2d1b2e;
+  --color-accent: #ff789f;
+  --color-accent-content: #ffffff;
+  --color-neutral: #6b4a6f;
+  --color-neutral-content: #f5f5f7;
+  --radius-selector: 999px;
+  --radius-field: 999px;
+  --radius-box: 28px;
+}
+
+/* ----------------------------------------------------------
+   Dark mode variant: trigger via [data-theme="dark"] on <html>.
+   Our useTheme hook sets this attribute, so `dark:bg-foo` etc.
+   works in tandem with our existing CSS-var theming approach.
+   ---------------------------------------------------------- */
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ----------------------------------------------------------
+   DESIGN TOKENS
+   Theme-aware CSS variables. Light values are the defaults;
+   the dark block below overrides them when [data-theme="dark"].
+   Components use these tokens via Tailwind utilities:
+     text-navy    -> color: var(--color-navy)
+     bg-soft      -> background-color: var(--color-soft)
+     shadow-card  -> box-shadow: var(--shadow-card)
+     rounded-card -> border-radius: var(--radius-card)
+   ---------------------------------------------------------- */
+
+@theme {
+  /* Colors */
+  --color-navy: #2d1b2e;
+  --color-slate: #6b4a6f;
+  --color-muted: #8b6a8f;
+  --color-soft: #ffe4b3;
+  --color-accent: #ff789f;
+  --color-accent-soft: #ffb51f;
+  --color-lavender: #ffb51f;
+
+  /* Body background (light) */
+  --color-body-base: #fffbf7;
+
+  /* Shadows */
+  --shadow-card: 0 24px 70px rgba(254, 71, 10, 0.08);
+  --shadow-navbar: 0 18px 50px rgba(15, 23, 42, 0.08);
+  --shadow-card-light: 0 20px 60px rgba(15, 23, 42, 0.06);
+  --shadow-btn-primary: 0 14px 30px rgba(255, 120, 159, 0.25);
+  --shadow-btn-primary-hover: 0 18px 36px rgba(255, 120, 159, 0.32);
+  --shadow-cert-button: 0 12px 28px rgba(255, 120, 159, 0.22);
+  --shadow-cert-button-hover: 0 16px 34px rgba(255, 120, 159, 0.3);
+  --shadow-nav-dropdown: 0 12px 30px rgba(15, 23, 42, 0.15);
+  --shadow-nav-mobile: 0 24px 50px rgba(15, 23, 42, 0.18);
+
+  /* Radii */
+  --radius-card: 28px;
+  --radius-card-lg: 40px;
+
+  /* Font */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji";
+
+  /* Transition */
+  --ease-portfolio: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Animations */
+  --animate-dropdown-fade: dropdownFadeIn 0.18s ease-out;
+  --animate-fade-in: fadeIn 0.2s ease-out;
+  --animate-shimmer: shimmer 2s linear infinite;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+
+/* ----------------------------------------------------------
+   DARK MODE TOKEN OVERRIDES
+   When [data-theme="dark"] is set on <html>, swap palette
+   tokens to the dark palette. Every utility that references
+   these tokens (text-navy, bg-soft, etc.) updates automatically.
+   ---------------------------------------------------------- */
+
+:root[data-theme="dark"] {
+  --color-navy: #f5f5f7;
+  --color-slate: #d1d1d6;
+  --color-muted: #a1a1a6;
+  --color-body-base: #1d1d1f;
+
+  /* Subtle accent tints for dark surfaces */
+  --color-soft: rgba(255, 120, 159, 0.18);
+  --color-soft-strong: rgba(255, 120, 159, 0.25);
+  --color-soft-soft: rgba(255, 120, 159, 0.12);
+
+  /* Card surface (dark) */
+  --color-card: rgba(45, 45, 50, 0.88);
+  --color-card-soft: rgba(45, 45, 50, 0.6);
+  --color-card-strong: rgba(45, 45, 50, 0.95);
+
+  /* Hero card inner surface (dark) */
+  --color-hero-card-top: rgba(45, 45, 50, 0.7);
+  --color-hero-card-bottom: rgba(45, 45, 50, 0.95);
+
+  /* Badge surface (dark) */
+  --color-badge: rgba(255, 120, 159, 0.12);
+
+  /* Scrollbar (dark) */
+  --color-scrollbar-track: #1d1d1f;
+}
+
+/* Light mode token overrides (default — but explicit for clarity) */
+:root[data-theme="light"] {
+  --color-soft: #ffe4b3;
+  --color-soft-strong: #ffe4b3;
+  --color-soft-soft: #fff5e6;
+  --color-card: rgba(255, 255, 255, 0.78);
+  --color-card-soft: rgba(255, 255, 255, 0.72);
+  --color-card-strong: rgba(255, 255, 255, 0.96);
+  --color-hero-card-top: rgba(255, 255, 255, 0.58);
+  --color-hero-card-bottom: rgba(255, 255, 255, 0.96);
+  --color-badge: #fff5e6;
+  --color-scrollbar-track: #fff5e6;
+}
+
+/* ----------------------------------------------------------
+   BASE LAYER
+   Global resets, body background, fonts, scrollbar, etc.
+   These are universal styles that don't fit into utility
+   classes (they target pseudo-elements or affect the body).
+   ---------------------------------------------------------- */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+    scroll-padding-top: 120px;
+    overscroll-behavior-y: none;
+    font-family: var(--font-sans);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background-color: var(--color-body-base);
+    background-image:
+      radial-gradient(circle at top left, rgba(255, 181, 31, 0.12), transparent 35%),
+      radial-gradient(circle at top right, rgba(255, 120, 159, 0.1), transparent 28%),
+      linear-gradient(180deg, #ffe4b3 0%, #fff5e6 45%, #fff9f0 100%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: var(--color-navy);
+    line-height: 1.7;
+    padding-top: 100px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+  }
+
+  :root[data-theme="dark"] body {
+    background-image:
+      radial-gradient(circle at top left, rgba(255, 181, 31, 0.08), transparent 35%),
+      radial-gradient(circle at top right, rgba(255, 120, 159, 0.06), transparent 28%),
+      linear-gradient(180deg, #2a2a2f 0%, #242429 45%, #1f1f24 100%);
+  }
+
+  /* iOS background-attachment fallback */
+  @supports (-webkit-touch-callout: none) {
+    body {
+      background-attachment: scroll;
+    }
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  main {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Webkit / Blink scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-scrollbar-track);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--color-accent) 0%, var(--color-accent-soft) 100%);
+    border-radius: 999px;
+    border: 2px solid var(--color-scrollbar-track);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent-soft);
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-accent) var(--color-scrollbar-track);
+  }
+
+  /* Skip link */
+  .skip-link {
+    position: absolute;
+    top: -100px;
+    left: 16px;
+    z-index: 9999;
+    padding: 12px 18px;
+    background: var(--color-navy);
+    color: #fff;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 14px;
+    transition: top 0.2s ease;
+  }
+  .skip-link:focus,
+  .skip-link:focus-visible {
+    top: 16px;
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  main:focus {
+    outline: none;
+  }
+
+  /* Focus-visible defaults for interactive elements */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ----------------------------------------------------------
+   UTILITIES
+   Small custom utilities for things Tailwind doesn't ship
+   with out of the box (focused on safe-area insets).
+   ---------------------------------------------------------- */
+
+@layer utilities {
+  .pt-safe-top {
+    padding-top: max(env(safe-area-inset-top), 0px);
+  }
+  .pb-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pl-safe-left {
+    padding-left: env(safe-area-inset-left, 0px);
+  }
+  .pr-safe-right {
+    padding-right: env(safe-area-inset-right, 0px);
+  }
+  .top-safe-top {
+    top: max(18px, env(safe-area-inset-top, 0px));
+  }
+}
