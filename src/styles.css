@@ -1814,7 +1814,7 @@ footer p {
   :root {
     --navy: #f5f5f7;
     --slate: #d1d1d6;
-    --muted: #000000;
+    --muted: #a1a1a6;
     --border: rgba(255, 120, 159, 0.25);
     color-scheme: dark;
   }
@@ -2136,14 +2136,17 @@ _:-ms-fullscreen,
 :root[data-theme="light"] .achievement-card,
 :root[data-theme="light"] .cert-card,
 :root[data-theme="light"] .timeline-card,
-:root[data-theme="light"] .contact-card,
-:root[data-theme="light"] .nav-links {
+:root[data-theme="light"] .contact-card {
   background: rgba(255, 255, 255, 0.78);
   border-color: rgba(255, 120, 159, 0.15);
 }
-:root[data-theme="light"] .nav-dropdown-menu { background: rgba(255, 255, 255, 0.95); }
+:root[data-theme="light"] .nav-links {
+  background: transparent;
+  border-color: transparent;
+}
+:root[data-theme="light"] .nav-dropdown-menu { background: rgba(255, 245, 230, 0.95); }
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  :root[data-theme="light"] .nav-dropdown-menu { background: rgba(255, 255, 255, 0.99); }
+  :root[data-theme="light"] .nav-dropdown-menu { background: rgba(255, 245, 230, 0.99); }
 }
 :root[data-theme="light"] .nav-links a:hover,
 :root[data-theme="light"] .nav-dropdown-trigger:hover,
@@ -2153,8 +2156,7 @@ _:-ms-fullscreen,
   background: #ffe4b3;
   color: var(--accent);
 }
-:root[data-theme="light"] .nav-links { background: rgba(255, 255, 255, 0.98); }
-:root[data-theme="light"] .nav-dropdown-menu { background: rgba(255, 245, 230, 0.6); }
+:root[data-theme="light"] .nav-dropdown-menu { background: rgba(255, 245, 230, 0.95); }
 :root[data-theme="light"] .btn.secondary { background: #fff; color: var(--accent); }
 :root[data-theme="light"] .btn.ghost { background: rgba(255, 255, 255, 0.55); }
 :root[data-theme="light"] .social-links a { background: rgba(255, 255, 255, 0.72); color: var(--slate); }
@@ -2394,3 +2396,4 @@ _:-ms-fullscreen,
     min-width: 180px;
   }
 }
+
